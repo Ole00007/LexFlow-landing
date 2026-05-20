@@ -1496,7 +1496,7 @@ function toggleFaq(btn) {
         language: lang()
       };
 
-      var res = await fetch(CHATBOT_URL, {
+      var res = await console.log('🟡 [Alessia] Sending...'); fetch(CHATBOT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -1546,6 +1546,8 @@ function toggleFaq(btn) {
 </script>
 </body>
 </html>
+
+
 
 
 
