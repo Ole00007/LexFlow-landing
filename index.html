@@ -1505,10 +1505,12 @@ function toggleFaq(btn) {
       if (!res.ok) throw new Error("HTTP " + res.status);
 
       var data = await res.json();
+    console.log('✅ [Alessia] Data parsed:', data);
       message.textContent = extractReply(data, c.fallback);
       message.dataset.liveReply = "1";
     } catch (err) {
-      message.textContent = c.error;
+      console.log('🔴 [Alessia] Fetch error:', err);
+    message.textContent = c.error;
       message.dataset.liveReply = "";
       console.error("LexFlow chatbot widget error:", err);
     } finally {
@@ -1546,6 +1548,7 @@ function toggleFaq(btn) {
 </script>
 </body>
 </html>
+
 
 
 
