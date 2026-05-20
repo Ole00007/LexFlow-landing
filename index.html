@@ -1481,44 +1481,46 @@ function toggleFaq(btn) {
   }
 
   async function sendUrgencyToChatbot() {
-    if (isSending || !message) return;
+  if (isSending || !message) return;
+  var c = i18n[lang()];
+  isSending = true;
+  message.dataset.liveReply = "";
+  message.textContent = c.sending;
 
-    var c = i18n[lang()];
-    isSending = true;
-    message.dataset.liveReply = "";
-    message.textContent = c.sending;
+  try {
+    var payload = {
+      message: "Urgency selected: " + activeVal,
+      urgency: activeVal,
+      source: "landing-page-widget",
+      language: lang()
+    };
 
-    try {
-      var payload = {
-        message: "Urgency selected: " + activeVal,
-        urgency: activeVal,
-        source: "landing-page-widget",
-        language: lang()
-      };
+    console.log("🟡 [Alessia] Sending...", payload);
 
-      var res = await console.log('🟡 [Alessia] Sending...'); fetch(CHATBOT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
+    var res = await fetch(CHATBOT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-      if (!res.ok) throw new Error("HTTP " + res.status);
+    console.log("🔵 [Alessia] Response received:", res.status, res.statusText);
 
-      var data = await res.json();
-    console.log('✅ [Alessia] Data:', data);
-    console.log('✅ [Alessia] Data parsed:', data);
-      message.textContent = extractReply(data, c.fallback);
-      message.dataset.liveReply = "1";
-    } catch (err) {
-      console.log('🔴 [Alessia] Fetch error:', err);
-    console.log('🔴 [Alessia] Error:', err);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    var data = await res.json();
+    console.log("✅ [Alessia] Data parsed:", data);
+
+    message.textContent = extractReply(data, c.fallback);
+    message.dataset.liveReply = "1";
+  } catch (err) {
+    console.log("🔴 [Alessia] Fetch error:", err);
     message.textContent = c.error;
-      message.dataset.liveReply = "";
-      console.error("LexFlow chatbot widget error:", err);
-    } finally {
-      isSending = false;
-    }
+    message.dataset.liveReply = "";
+    console.error("LexFlow chatbot widget error:", err);
+  } finally {
+    isSending = false;
   }
+}
 
   if (launcher) {
     launcher.addEventListener("click", function () {
@@ -1550,6 +1552,9 @@ function toggleFaq(btn) {
 </script>
 </body>
 </html>
+
+
+
 
 
 
